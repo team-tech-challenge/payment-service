@@ -67,11 +67,7 @@ O Microserviço de Payment é responsável por gerenciar todas as operações re
 		- `mappers:` Conversão entre as entidades de domínio e os modelos do banco de dados.
 		- `routes:` Configuração das rotas HTTP e integração com os controladores.
 	- `interfaces:` Define os gateways para comunicação entre diferentes camadas.
-		- `gateways:` Interfaces para repositórios e gateways.
-		- `ports:` Definição de interfaces para entrada e saída.
-			- `in:` Interfaces para services e controllers.
-			- `out:` Interfaces para repositórios e gateways.
-		- `services:` Implementação dos casos de uso e lógica de negócio.		
+		- `gateways:` Interfaces para repositórios e gateways.			
 	- `main.ts:` Ponto de entrada da aplicação.
 
 ## Iniciando a aplicação
