@@ -33,9 +33,9 @@ O Microserviço de Payment é responsável por gerenciar todas as operações re
 	│   ├── adpters
 	│   ├── controllers
 	│   ├── usecases
-	│   ├── utils
+	│   └── utils
 	├── domain
-	│   ├── entities
+	│   └── entities
 	├── infrastructure
 	│   ├── config
 	│   ├── external
@@ -43,9 +43,9 @@ O Microserviço de Payment é responsável por gerenciar todas as operações re
 	│   │   ├── database
 	│   │   │   └── models
 	│   ├── mappers
-	│   ├── routes   
+	│   └── routes   
 	├── interfaces
-	│   ├── gateways   
+	│   └── gateways   
 	├── test
 	└── main.ts
 
