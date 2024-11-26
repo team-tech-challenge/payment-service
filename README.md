@@ -41,7 +41,7 @@ O Microserviço de Payment é responsável por gerenciar todas as operações re
 	│   ├── external
 	│   │   ├── api
 	│   │   ├── database
-	│   │   │   ├── models
+	│   │   │   └── models
 	│   ├── mappers
 	│   ├── routes   
 	├── interfaces
