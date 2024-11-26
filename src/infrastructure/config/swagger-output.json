@@ -1,0 +1,199 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "v1.0.0",
+    "title": "Swagger Tech Challenge",
+    "description": "Tech Challenge API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {    
+    "/payment/all": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Return all payments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment/create": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/payment/update/{id}": {
+      "put": {
+        "tags": [
+          "FakeCheckout"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FakeCheckout"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Category": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Category Name"
+          }
+        },
+        "xml": {
+          "name": "Category"
+        }
+      },      
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "example": "MercadoPago"
+          },
+          "paymentCode": {
+            "type": "string",
+            "example": "sdofjsiodj"
+          },
+          "status": {
+            "type": "string",
+            "example": "toPay"
+          },
+          "orderId": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "Payment"
+        }
+      },
+      "webhookPayment": {
+        "type": "object",
+        "properties": {          
+          "id": {
+            "type": "string",
+            "example": "12345678"
+          },
+          "type": {
+            "type": "string",
+            "example": "payment"
+          }          
+        },
+        "xml": {
+          "name": "Payment"
+        }
+      },
+      "FakeCheckout": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "example": "MercadoPago"
+          },
+          "paymentCode": {
+            "type": "string",
+            "example": "sdofjsiodj"
+          },
+          "status": {
+            "type": "string",
+            "example": "PAID"
+          },
+          "orderId": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "FakeCheckout"
+        }            
+      }
+    }
+  }
+}

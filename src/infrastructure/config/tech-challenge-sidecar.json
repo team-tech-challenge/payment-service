@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "55582c39-2f5b-4978-a40c-84ad3e47f8ed",
+		"name": "Tech-Challenge-Sidecar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11088853"
+	},
+	"item": [		
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "01",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentMethod\": \"MercadoPago\",\n  \"paymentCode\": \"QRCODE8329742967349\",\n  \"status\": \"Paid\",\n  \"orderId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_ADDRESS}}/payment/create",
+							"host": [
+								"{{API_ADDRESS}}"
+							],
+							"path": [
+								"payment",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentMethod\": \"MercadoPago\",\n  \"paymentCode\": \"QRCODE8329742967349\",\n  \"status\": \"Paid\",\n  \"orderId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_ADDRESS}}/payment/create",
+							"host": [
+								"{{API_ADDRESS}}"
+							],
+							"path": [
+								"payment",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_ADDRESS",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
