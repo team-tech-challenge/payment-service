@@ -6,11 +6,6 @@ const doc = {
 		title: "Swagger Tech Challenge",
 		description: "Tech Challenge API",
 	},
-	servers: [
-		{
-			url: "https//payment.techchallenge.com.br",
-		},
-	],
 	definitions: {
 		Payment: {
 			paymentMethod: "MercadoPago",
