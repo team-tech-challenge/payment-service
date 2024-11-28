@@ -7,7 +7,8 @@
   },
   "servers": [
     {
-      "url": "https//payment.techchallenge.com.br"
+      "url": "http://localhost:3000",
+      "description": "API Base URL"
     }
   ],
   "paths": {
