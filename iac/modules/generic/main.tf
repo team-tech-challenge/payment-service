@@ -46,3 +46,20 @@ module "aws_ecr_repository_policy" {
 resource "kubectl_manifest" "argocd_application" {
   yaml_body = file("${path.root}./iac/app/applications.yaml")
 }
+
+################################################
+#                                              #
+#              SECRETS MANAGER                 #
+#                                              #
+################################################
+
+module "aws_secrets_manager" {
+	source        = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_secret_manager?ref=main"
+	secret_name   = "${var.project_name}-secret-manager"
+	create_secret = var.create_aws_ecr_repository
+
+	tags = {
+		Name = "${var.project_name}-secret-manager"
+	}
+}
+
