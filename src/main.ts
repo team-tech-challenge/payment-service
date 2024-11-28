@@ -6,12 +6,12 @@ import { connectToMongoDB } from "@config/connectionFactory";
 
 const server = new http.Server(express());
 const port = Number(process.env.PORT);
-const host = Number(process.env.HOST);
+// const host = Number(process.env.HOST);
 
 async function startServer() {
 	await connectToMongoDB();
-		
-	server.listen(port, host, () => {
+
+	server.listen(port, () => {
 		console.log(`Server running on ${port}`);
 		newman();
 	});
