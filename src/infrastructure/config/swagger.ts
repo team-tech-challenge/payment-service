@@ -1,4 +1,5 @@
 import swaggerAutogen from "swagger-autogen";
+import "dotenv/config";
 
 const doc = {
 	info: {
