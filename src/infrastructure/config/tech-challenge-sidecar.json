@@ -91,7 +91,7 @@
 	"variable": [
 		{
 			"key": "API_ADDRESS",
-			"value": "https://payment.techchallenge.com.br",
+			"value": "",
 			"type": "string"
 		}
 	]
