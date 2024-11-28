@@ -5,7 +5,7 @@
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11088853"
 	},
-	"item": [		
+	"item": [
 		{
 			"name": "Payment",
 			"item": [
@@ -91,7 +91,7 @@
 	"variable": [
 		{
 			"key": "API_ADDRESS",
-			"value": "http://localhost:3000",
+			"value": "https://payment.techchallenge.com.br",
 			"type": "string"
 		}
 	]
