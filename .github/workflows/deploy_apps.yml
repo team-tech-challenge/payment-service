@@ -1,67 +1,66 @@
-name: 'Deploy Application'
+name: 'Deploy Application in Production'
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+    push:
+        branches:
+            - develop
 
 permissions:
-  contents: write
-  packages: write
-  actions: write
+    contents: write
+    packages: write
+    actions: write
 
 jobs:
-  create-ecr:
-    uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-elastic-container-registry.yml@main
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
-      TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
-      TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
-      TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+    create-ecr:
+        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-elastic-container-registry.yml@main
+        secrets:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+            WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+            TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+            TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+            TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
 
-  build-push:
-    needs: create-ecr
-    uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/build-image-and-push.yml@main
-    secrets:
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+    build-push:
+        needs: create-ecr
+        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/build-image-and-push.yml@main
+        secrets:
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
 
-  apps-argocd:
-    needs: build-push
-    uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-argocd-app.yml@main
-    with:
-      environment: 'production'
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
-      TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
-      TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
-      TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-      EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
+    apps-argocd:
+        needs: build-push
+        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-argocd-app.yml@main
+        with:
+            environment: 'production'
+        secrets:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+            TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+            TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+            TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+            EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
 
-  change-tag:
-    needs: apps-argocd
-    uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/deploy-argocd.yml@main
-    with:
-      destination_repo: 'team-tech-challenge/tech-challenge-manifest'
-      destination_branch: 'main'
-    secrets:
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+    change-tag:
+        needs: apps-argocd
+        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-argocd-kustomization.yml@create_new_workflow_with_kustomization
+        with:
+            destination_repo: 'team-tech-challenge/tech-challenge-manifest'
+            destination_branch: 'payment_service'
+            kustomize_directory: 'payment-service/kustomize/overlays/dev'
+        secrets:
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}

@@ -1,4 +1,4 @@
-module "application" {
+module "payment-service" {
   source = "./modules/generic"
 
   project_name              = "payment-service"

@@ -42,6 +42,7 @@ module "aws_ecr_repository_policy" {
 #            ARGOCD APPLICATION
 #
 ################################################
+
 resource "kubectl_manifest" "argocd_application" {
-  yaml_body = file("${path.root}/iac/app/applications.yaml")
+  yaml_body = file("${path.root}./iac/app/applications.yaml")
 }
