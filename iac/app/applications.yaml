@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/team-tech-challenge/tech-challenge-manifest.git'
-    targetRevision: payment_service
+    targetRevision: service_payment
     path: payment-service/kustomize/overlays/dev
     kustomize: {}
   destination:
