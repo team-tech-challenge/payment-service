@@ -1,5 +1,6 @@
 import swaggerAutogen from "swagger-autogen";
-const swaggerBaseUrl = process.env.SWAGGER_BASE_URL || "http://localhost:3000";
+
+const swaggerBaseUrl = process.env.SWAGGER_BASE_URL;
 
 const doc = {
 	info: {
@@ -35,4 +36,7 @@ const doc = {
 
 const outputFile = "./swagger-output.json";
 const endpointsFiles = ["./src/infrastructure/config/routes.ts"];
-swaggerAutogen({ openapi: "3.0.0" })(outputFile, endpointsFiles, doc);
+
+swaggerAutogen({ openapi: "3.0.0" })(outputFile, endpointsFiles, doc).then(() => {
+	console.log("Swagger documentation generated successfully.");
+});

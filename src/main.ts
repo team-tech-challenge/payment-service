@@ -15,5 +15,4 @@ async function startServer() {
 		newman();
 	});
 }
-
 startServer();
