@@ -5,7 +5,7 @@ dotenv.config();
 
 export const connectToMongoDB = async (): Promise<void> => {
 	try {
-		const uri = `${process.env.MONGODB_HOST}://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@localhost:27017`;
+		const uri = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`;
 		console.log(uri)
 		await mongoose.connect(uri, {
 			autoIndex: false, // Desabilita criação automática de índices
