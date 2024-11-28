@@ -5,12 +5,7 @@
     "title": "Swagger Tech Challenge",
     "description": "Tech Challenge API"
   },
-  "servers": [
-    {
-      "url": "http://localhost:3000"
-    }
-  ],
-  "paths": {    
+  "paths": {
     "/payment/all": {
       "get": {
         "tags": [
@@ -129,7 +124,7 @@
         "xml": {
           "name": "Category"
         }
-      },      
+      },
       "Payment": {
         "type": "object",
         "properties": {
@@ -156,7 +151,7 @@
       },
       "webhookPayment": {
         "type": "object",
-        "properties": {          
+        "properties": {
           "id": {
             "type": "string",
             "example": "12345678"
@@ -164,7 +159,7 @@
           "type": {
             "type": "string",
             "example": "payment"
-          }          
+          }
         },
         "xml": {
           "name": "Payment"
@@ -192,7 +187,7 @@
         },
         "xml": {
           "name": "FakeCheckout"
-        }            
+        }
       }
     }
   }
