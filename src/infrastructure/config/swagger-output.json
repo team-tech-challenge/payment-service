@@ -5,6 +5,11 @@
     "title": "Swagger Tech Challenge",
     "description": "Tech Challenge API"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
   "paths": {
     "/payment/all": {
       "get": {
@@ -31,6 +36,75 @@
         }
       }
     },
+    "/payment/{Id}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/payment/mp/{paymentCode}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "paymentCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/payment/order/{id}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/payment/create": {
       "post": {
         "tags": [
@@ -48,6 +122,29 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Payment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment/webhook": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/webhookPayment"
               }
             }
           }
@@ -113,18 +210,6 @@
   },
   "components": {
     "schemas": {
-      "Category": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "Category Name"
-          }
-        },
-        "xml": {
-          "name": "Category"
-        }
-      },
       "Payment": {
         "type": "object",
         "properties": {
@@ -138,7 +223,7 @@
           },
           "status": {
             "type": "string",
-            "example": "toPay"
+            "example": "ToPay"
           },
           "orderId": {
             "type": "number",
@@ -162,7 +247,7 @@
           }
         },
         "xml": {
-          "name": "Payment"
+          "name": "webhookPayment"
         }
       },
       "FakeCheckout": {

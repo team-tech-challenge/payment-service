@@ -6,28 +6,23 @@ const doc = {
 		title: "Swagger Tech Challenge",
 		description: "Tech Challenge API",
 	},
-	servers: [
-		{
-			url: "http://localhost:3000",
-		},
-	],
-	definitions: {		
-		Payment: {	
+	definitions: {
+		Payment: {
 			paymentMethod: "MercadoPago",
 			paymentCode: "sdofjsiodj",
-			status: "ToPay",		
+			status: "ToPay",
 			orderId: 1
 		},
 		webhookPayment: {
 			id: "12345678",
-			type: "payment"			
+			type: "payment"
 		},
 		FakeCheckout: {
 			paymentMethod: "MercadoPago",
 			paymentCode: "sdofjsiodj",
 			status: "PAID",
 			orderId: 1,
-		}		
+		}
 	},
 };
 
