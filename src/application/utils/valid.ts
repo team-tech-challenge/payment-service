@@ -1,11 +1,5 @@
 const crypto = require('crypto');
 
-const isValidStatus = (status: string) => {
-    // Define valid statuses
-    const validStatuses = ["Created", "Processed", "Shipped", "Delivered", "Cancelled", "Waiting Payment"];
-    return validStatuses.includes(status);
-}
-
 const isValidNotification = (req, secret) => {
     const signature = req.headers['x-signature'];
     if (!signature) return false;
@@ -26,4 +20,4 @@ const isValidNotification = (req, secret) => {
     return digest === v1;
   }
 
-export {isValidStatus, isValidNotification}
+export {isValidNotification}
