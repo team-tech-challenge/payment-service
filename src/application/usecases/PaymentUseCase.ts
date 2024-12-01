@@ -1,14 +1,12 @@
 import { IPaymentGateway } from "@gateways/IPaymentGateway";
-import { IOrderGateway } from "@gateways/IOrderGateway";
 import { Payment } from "@entities/Payment";
-import { ICustomerGateway } from "@gateways/ICustomerGateway";
 import { createMercadoPago, searchMercadoPago } from "src/infrastructure/external/api/MercadoPago";
+import { searchCustomer } from "src/infrastructure/external/api/Customer";
+import { searchOrder, updateOrder } from "src/infrastructure/external/api/Order";
 
 export class PaymentUseCase {
 	constructor(
-		private readonly paymentGateway: IPaymentGateway,
-		private readonly orderGateway: IOrderGateway,
-		private readonly customerGateway: ICustomerGateway
+		private readonly paymentGateway: IPaymentGateway
 	) { }
 
 	async getAll(): Promise<any> {
@@ -45,28 +43,27 @@ export class PaymentUseCase {
 	async createPayment(data: Payment): Promise<any> {
 
 		try {
-
-			//TROCAR PARA BUSCA NA API
-			const order = await this.orderGateway.getOrderById(data.getOrder());
+								
+			const order = await searchOrder(data.getOrder())	
 			if(!order) throw new Error('Order not found');
-			//TROCAR PARA BUSCA NA API
-			const customer = await this.customerGateway.getCustomerById(order.getCustomer());
+			
+			const customer = await searchCustomer(order.customerId)			
 			if(!customer) throw new Error('Customer not found');
-			console.log(order.getId())
-			const paymentMercadoPago = await createMercadoPago(order.getId(), order.getPrice(), customer);				
+			
+			const paymentMercadoPago = await createMercadoPago(order.id, order.price, customer);				
 			const idPaymentMercadoPago = paymentMercadoPago.id;
 			const statusPaymentMercadoPago= paymentMercadoPago.status
-							
-			const payment = new Payment(data.getPaymentMethod(), idPaymentMercadoPago.toString(), statusPaymentMercadoPago.toString(),order.getId(), paymentMercadoPago);
-			
+					
+			const payment = new Payment(data.getPaymentMethod(), idPaymentMercadoPago.toString(), statusPaymentMercadoPago.toString(), order.id, paymentMercadoPago);		
+					
 			const createPayment = await this.paymentGateway.newPayment(payment);
 			
-			//TROCAR PARA BUSCA NA API
-			order.setStatus("Waiting Payment");
-			await this.orderGateway.updateOrder(order.getId(), order);			
 			
+			order.status = "Waiting Payment";			
+			await updateOrder(order.id, order);
 
 			return this.getPaymentById(createPayment.getId());
+
 		} catch (error) {
 			console.error(`Error in create Payment: ${error.message}`);
 			throw new Error("Failed to process create payment");
@@ -124,14 +121,14 @@ export class PaymentUseCase {
 		
 			// Atualiza o status do pedido, se necessário
 			
-			const order = await this.orderGateway.getOrderById(existingPayment.getOrder());
+			const order = await searchOrder(existingPayment.getOrder());
 
 			if (paymentStatus === 'approved') {
 				order.setStatus("Processed");
-				await this.orderGateway.updateOrder(order.getId(), order);
+				await updateOrder(order.id, order);
 			} else if (paymentStatus === 'rejected') {		  
 				order.setStatus("Cancelled");
-				await this.orderGateway.updateOrder(order.getId(), order);
+				await updateOrder(order.id, order);
 			}
 			return "Payment and Order updated successfully";
 		} catch (error) {

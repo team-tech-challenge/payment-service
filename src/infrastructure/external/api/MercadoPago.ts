@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { getFirstAndLastName } from '@utils/transformation';
 
 config();
 
@@ -20,7 +21,7 @@ const createMercadoPago = async (id: number, price: number, customer: any) => {
         'X-Idempotency-Key': idempotencyKey,
     };
         
-    const { firstName, lastName } = customer.getFirstAndLastName();
+    const { firstName, lastName } = getFirstAndLastName(customer.name);
     
     try {
         

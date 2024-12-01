@@ -53,9 +53,10 @@ export class PaymentController {
 	
 	async getPaymentByMp(req, res): Promise<void> {
         try {
-			console.log(req.params)
+			
+
             const { paymentCode } = req.params;
-			console.log(paymentCode)
+			
             const payment = await this.paymentUseCase.getPaymentByMp(paymentCode);
             if (payment) {
                 res.json(payment);
@@ -102,14 +103,21 @@ export class PaymentController {
 
 	async webhook(req, res) {		
 		try {
-		  const { id, type } = req.body;
+			const secret = process.env.MERCADO_PAGO_SECRET; // Sua assinatura secreta do Mercado Pago
+			const isValid = isValidNotification(req, secret);
 
-		  if (type === 'payment') {			
+			if (!isValid) {
+				console.error('Webhook validation failed');
+				return res.status(401).send('Unauthorized');
+			}
+			console.log(req.body)
+			const bodyMercadoPago = req.body;
+
+		  if (bodyMercadoPago.type === 'payment') {			
 			// Chama o use case para processar o pagamento
-			await this.paymentUseCase.webhookPayment(id);
+			await this.paymentUseCase.webhookPayment(bodyMercadoPago.data.id);
 		  }
-	  
-		  res.status(200).send("Webhook received successfully");
+		  defaultReturnStatement(res, "Webhook received successfully","");
 		} catch (error) {
 		   res.status(400).send(error.message);
 		}

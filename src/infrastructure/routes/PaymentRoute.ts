@@ -2,16 +2,12 @@ import { Router } from "express";
 import { PaymentAdapter } from "@adapters/PaymentAdapter";
 import { PaymentUseCase } from "@usecases/PaymentUseCase";
 import { PaymentController } from "@controllers/PaymentController";
-import { OrderAdapter } from "@adapters/OrderAdapter";
-import { CustomerAdapter } from "@adapters/CustomerAdapter";
 
 export const paymentRoute = Router();
 
 const paymentAdapter = new PaymentAdapter();
-const orderAdapter = new OrderAdapter();
-const customerAdapter = new CustomerAdapter();
 
-const paymentUseCase = new PaymentUseCase(paymentAdapter, orderAdapter, customerAdapter);
+const paymentUseCase = new PaymentUseCase(paymentAdapter);
 const paymentController = new PaymentController(paymentUseCase);
 
 paymentRoute.get("/all", (req, res) => {
