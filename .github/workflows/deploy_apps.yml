@@ -52,11 +52,11 @@ jobs:
 
     change-tag:
         needs: apps-argocd
-        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-argocd-kustomization.yml@create_new_workflow_with_kustomization
+        uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-argocd-kustomization.yml@main
         with:
             destination_repo: 'team-tech-challenge/tech-challenge-manifest'
-            destination_branch: 'service_payment'
-            kustomize_directory: 'payment-service/kustomize/overlays/dev'
+            destination_branch: 'main'
+            kustomize_directory: 'payment-service/kustomize/overlays/prd'
         secrets:
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
