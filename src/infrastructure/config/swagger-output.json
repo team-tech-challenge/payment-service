@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://payment.techchallenge.com.br",
+      "url": "",
       "description": "API Base URL"
     }
   ],

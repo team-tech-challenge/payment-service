@@ -1,6 +1,6 @@
 import swaggerAutogen from "swagger-autogen";
 
-const swaggerBaseUrl = "http//:localhost:3000";
+const swaggerBaseUrl = "";
 
 const doc = {
 	info: {
