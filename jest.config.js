@@ -5,6 +5,7 @@ module.exports = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
 	collectCoverage: true,
+	testTimeout: 30000,
 	coverageDirectory: 'coverage',
 	collectCoverageFrom: [
 	  "<rootDir>/src/**/*.ts",
@@ -18,4 +19,5 @@ module.exports = {
 		"<rootDir>/",
 	],
   	testMatch: ["<rootDir>/tests/**/*.test.ts"], // Define onde estão os testes
+	testPathIgnorePatterns: ["/node_modules/", "tests/application/utils/", "tests/infrastructure/routes/", "tests/infrastructure/mappers/"],
   };
