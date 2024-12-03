@@ -1,9 +1,11 @@
 name: 'Deploy Application in Production'
 
 on:
-    push:
+    pull_request:
+        types:
+            - closed
         branches:
-            - develop
+            - main
 
 permissions:
     contents: write
