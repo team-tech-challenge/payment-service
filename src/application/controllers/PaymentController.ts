@@ -11,7 +11,6 @@ export class PaymentController {
 			const payments = await this.paymentUseCase.getAll();
 			defaultReturnStatement(res, "Payments", payments);
 		} catch (err) {
-			console.error(err);
 			res.status(500).json({ status: 500, error: err });
 		}
 	}
@@ -21,7 +20,7 @@ export class PaymentController {
             const { Id } = req.params;
             const payment = await this.paymentUseCase.getPaymentById(Id);
             if (payment) {
-                res.json(payment);
+                res.status(200).json(payment);
             } else {
                 res.status(404).json({ error: "Payment not found" });
             }
@@ -31,14 +30,8 @@ export class PaymentController {
     }
 	
 	async getPaymentByOrderId(req, res): Promise<void> {
-        try {
-			const secret = process.env.MERCADO_PAGO_SECRET; // Sua assinatura secreta do Mercado Pago
-			const isValid = isValidNotification(req, secret);
-
-			if (!isValid) {
-			console.error('Webhook validation failed');
-			return res.status(401).send('Unauthorized');
-			}
+        try {		
+			
             const { Id } = req.params;
             const payment = await this.paymentUseCase.getPaymentByOrderId(Id);
             if (payment) {
@@ -75,7 +68,6 @@ export class PaymentController {
 			const payment = await this.paymentUseCase.createPayment(paymentData);
 			defaultReturnStatement(res, "Payment Created", payment);
 		} catch (err) {
-			console.error(err);
 			res.status(500).json({ status: 500, error: err });
 		}
 	}
@@ -85,7 +77,6 @@ export class PaymentController {
 			const result = await this.paymentUseCase.updatePayment(req.body, req.params.id);
 			defaultReturnStatement(res, "Payment and Order updated successfully", result);
 		} catch (err) {
-			console.error(err);
 			res.status(err.message === "Payment not executed" ? 404 : 500).json({ status: err.message === "Payment not executed" ? 404 : 500, error: err });
 		}
 	}
@@ -96,7 +87,6 @@ export class PaymentController {
 			const responseMessage = "Payment deleted successfully";
 			defaultReturnStatement(res, responseMessage, deletedCount);
 		} catch (err) {
-			console.error(err);
 			res.status(err.message === "Payment not found" ? 404 : 500).json({ status: err.message === "Payment not found" ? 404 : 500, error: err });
 		}
 	}
@@ -106,11 +96,9 @@ export class PaymentController {
 			const secret = process.env.MERCADO_PAGO_SECRET; // Sua assinatura secreta do Mercado Pago
 			const isValid = isValidNotification(req, secret);
 
-			if (!isValid) {
-				console.error('Webhook validation failed');
+			if (!isValid) {				
 				return res.status(401).send('Unauthorized');
-			}
-			console.log(req.body)
+			}			
 			const bodyMercadoPago = req.body;
 
 		  if (bodyMercadoPago.type === 'payment') {			
