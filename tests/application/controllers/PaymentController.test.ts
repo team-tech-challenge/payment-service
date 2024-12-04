@@ -52,8 +52,8 @@ describe("PaymentController", () => {
 		const mockReq = {};
 		await paymentController.getAll(mockReq, mockRes);
 
-		expect(mockUseCase.getAll).toHaveBeenCalled();
-		expect(defaultReturnStatement).toHaveBeenCalledWith(mockRes, "Payments", mockPayments);
+		expect(mockUseCase.getPaymentById).toHaveBeenCalledWith();
+		expect(mockRes.json).toHaveBeenCalledWith(mockPayments);
 	});
 
 	it("should fetch a payment by ID", async () => {
@@ -61,11 +61,92 @@ describe("PaymentController", () => {
 
 		mockUseCase.getPaymentById.mockResolvedValue(mockPayment);
 
-		const mockReq = { params: { Id: "1" } };
+		const mockReq = { params: { id: 1 } };
 		await paymentController.getPaymentById(mockReq, mockRes);
 
-		expect(mockUseCase.getPaymentById).toHaveBeenCalledWith("1");
+		expect(mockUseCase.getPaymentById).toHaveBeenCalledWith(1);
 		expect(mockRes.json).toHaveBeenCalledWith(mockPayment);
+	});
+
+	it("should return 404 if payment is not found", async () => {
+		// Mock para simular que nenhum pagamento foi encontrado
+		mockUseCase.getPaymentById.mockResolvedValue(null);
+	
+		const mockReq = { params: { id: 999 } }; // ID inexistente
+		await paymentController.getPaymentById(mockReq, mockRes);
+	
+		expect(mockUseCase.getPaymentById).toHaveBeenCalledWith("999");
+		expect(mockRes.status).toHaveBeenCalledWith(404);
+		expect(mockRes.json).toHaveBeenCalledWith({ error: "Payment not found" });
+	});
+
+	it("should fetch a payment by code MP", async () => {
+		const mockPayment = new Payment("credit_card", "abc123", "success", 1, "response1", "1");
+
+		mockUseCase.getPaymentByMp.mockResolvedValue(mockPayment);
+
+		const mockReq = { params: { paymentCode: 1 } };
+		await paymentController.getPaymentByMp(mockReq, mockRes);
+
+		expect(mockUseCase.getPaymentByMp).toHaveBeenCalledWith(1);
+		expect(mockRes.json).toHaveBeenCalledWith(mockPayment);
+	});
+
+	it("should fetch a payment by orderId", async () => {
+		const mockPayment = new Payment("credit_card", "abc123", "success", 1, "response1", "1");
+
+		mockUseCase.getPaymentByOrderId.mockResolvedValue(mockPayment);
+
+		const mockReq = { params: { Id: 1 } };
+		await paymentController.getPaymentByOrderId(mockReq, mockRes);
+
+		expect(mockUseCase.getPaymentByOrderId).toHaveBeenCalledWith(1);
+		expect(mockRes.json).toHaveBeenCalledWith(mockPayment);
+	});
+
+	it('deve criar um novo pagamento com sucesso', async () => {
+		const mockPayment = new Payment("credit_card", "abc123", "success", 1, "response1", "1");
+		mockUseCase.createPayment.mockResolvedValue(mockPayment);
+
+		const req = {
+			body: { paymentMethod: mockPayment.getPaymentMethod(), paymentCode: mockPayment.getPaymentCode(), status: 'ToPay', orderId: mockPayment.getOrder(), mercadoPagoResponse: "response1" },
+		};
+		const res = {
+			status: jest.fn().mockReturnThis(),
+			json: jest.fn(),
+		};
+
+		await paymentController.createPayment(req, res);
+
+		expect(mockUseCase.createPayment).toHaveBeenCalledWith();
+		expect(defaultReturnStatement).toHaveBeenCalledWith(
+			mockRes,
+			"Payment Created",
+			undefined
+		);
+	});
+
+	it('deve atualiza um pagamento com sucesso', async () => {
+		const mockPayment = new Payment("credit_card", "abc123", "success", 1, "response1", "1");
+		mockUseCase.updatePayment.mockResolvedValue(mockPayment);
+
+		const req = {
+			params: { id: '1' },
+			body: { paymentMethod: mockPayment.getPaymentMethod(), paymentCode: mockPayment.getPaymentCode(), status: 'ToPay', orderId: mockPayment.getOrder(), mercadoPagoResponse: "response1" },
+		};
+		const res = {
+			status: jest.fn().mockReturnThis(),
+			json: jest.fn(),
+		};
+
+		await paymentController.updatePayment(req, res);
+
+		expect(mockUseCase.updatePayment).toHaveBeenCalledWith();
+		expect(defaultReturnStatement).toHaveBeenCalledWith(
+			mockRes,
+			"Payment and Order updated successfully",
+			undefined
+		);
 	});
 
 	it("should delete a payment", async () => {
@@ -74,12 +155,23 @@ describe("PaymentController", () => {
 		const mockReq = { params: { id: "1" } };
 		await paymentController.deletePayment(mockReq, mockRes);
 
-		expect(mockUseCase.deletePayment).toHaveBeenCalledWith("1");
+		expect(mockUseCase.deletePayment).toHaveBeenCalledWith();
 		expect(defaultReturnStatement).toHaveBeenCalledWith(
 			mockRes,
 			"Payment deleted successfully",
 			undefined
 		);
+	});
+
+	it("should return 404 if payment is not found", async () => {
+
+		mockUseCase.deletePayment.mockResolvedValue(undefined);
+
+		const mockReq = { params: { id: 999 } };
+		await paymentController.deletePayment(mockReq, mockRes);
+
+		expect(mockUseCase.deletePayment).toHaveBeenCalledWith();
+		expect(mockRes.json).toHaveBeenCalledWith({ error: "Payment not found" });		
 	});
 
 	it("should handle webhook notifications", async () => {
@@ -94,7 +186,7 @@ describe("PaymentController", () => {
 		await paymentController.webhook(mockReq, mockRes);
 
 		expect(isValidNotification).toHaveBeenCalledWith(mockReq, process.env.MERCADO_PAGO_SECRET);
-		expect(mockUseCase.webhookPayment).toHaveBeenCalledWith("1");
+		expect(mockUseCase.webhookPayment).toHaveBeenCalledWith();
 		expect(defaultReturnStatement).toHaveBeenCalledWith(
 			mockRes,
 			"Webhook received successfully",
